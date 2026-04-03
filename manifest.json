@@ -2,7 +2,7 @@
   "name": "Weight Manager",
   "short_name": "WeightMgr",
   "description": "Manage weight scientifically, easily create your ideal body",
-  "start_url": "/index.html",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#165DFF",
   "theme_color": "#165DFF",
@@ -17,6 +17,6 @@
   ],
   "categories": ["health", "lifestyle", "fitness"],
   "lang": "en",
-  "scope": "/",
+  "scope": "./",
   "prefer_related_applications": false
 }

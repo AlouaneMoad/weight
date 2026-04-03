@@ -1,11 +1,16 @@
-const CACHE_NAME = 'weight-manager-v1';
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  'https://cdn.tailwindcss.com/3.3.3',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap'
-];
+const CACHE_NAME = 'weight-manager-v2';
+
+function urlsToPrecache() {
+  const scope = self.registration.scope;
+  return [
+    scope,
+    new URL('index.html', scope).href,
+    new URL('manifest.json', scope).href,
+    new URL('icon.svg', scope).href,
+    'https://cdn.tailwindcss.com/3.3.3',
+    'https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap'
+  ];
+}
 
 // Install event - cache essential resources
 self.addEventListener('install', (event) => {
@@ -13,7 +18,7 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('Opened cache');
-        return cache.addAll(urlsToCache);
+        return cache.addAll(urlsToPrecache());
       })
       .then(() => self.skipWaiting())
   );
@@ -65,8 +70,9 @@ self.addEventListener('fetch', (event) => {
           return response;
         }).catch(() => {
           // Return offline page or fallback for HTML requests
-          if (event.request.headers.get('accept').includes('text/html')) {
-            return caches.match('/index.html');
+          const accept = event.request.headers.get('accept');
+          if (accept && accept.includes('text/html')) {
+            return caches.match(new URL('index.html', self.registration.scope).href);
           }
         });
       })
@@ -89,8 +95,8 @@ async function syncWeightData() {
 self.addEventListener('push', (event) => {
   const options = {
     body: event.data ? event.data.text() : 'New update available!',
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
+    icon: new URL('icon.svg', self.registration.scope).href,
+    badge: new URL('icon.svg', self.registration.scope).href,
     vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
