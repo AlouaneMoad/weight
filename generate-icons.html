@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icon Generator - Weight Manager PWA</title>
+    <script src="https://cdn.tailwindcss.com/3.3.3"></script>
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #165DFF 0%, #36CFC9 100%);
+            font-family: 'Inter', sans-serif;
+        }
+        .icon-preview {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-8">
+    <div class="max-w-4xl mx-auto text-center">
+        <h1 class="mb-8 text-4xl font-bold text-white">PWA Icon Generator</h1>
+        <p class="mb-10 text-lg text-white opacity-90">
+            Click the buttons below to download your PWA icons in different sizes
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+            <!-- 192x192 Icon -->
+            <div class="icon-preview">
+                <canvas id="canvas192" width="192" height="192"></canvas>
+                <p class="mt-4 text-gray-600 font-semibold">192x192</p>
+                <button onclick="downloadIcon(192)" class="mt-4 px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition font-semibold">
+                    Download PNG
+                </button>
+            </div>
+            
+            <!-- 512x512 Icon -->
+            <div class="icon-preview">
+                <canvas id="canvas512" width="512" height="512"></canvas>
+                <p class="mt-4 text-gray-600 font-semibold">512x512</p>
+                <button onclick="downloadIcon(512)" class="mt-4 px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition font-semibold">
+                    Download PNG
+                </button>
+            </div>
+        </div>
+        
+        <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-2xl p-6">
+            <h2 class="mb-4 text-2xl font-bold text-white">Instructions</h2>
+            <ol class="text-left text-white opacity-90 space-y-2">
+                <li>1. Click each button to download the PNG icons</li>
+                <li>2. Save them as <code class="bg-white bg-opacity-30 px-2 py-1 rounded">icon-192.png</code> and <code class="bg-white bg-opacity-30 px-2 py-1 rounded">icon-512.png</code></li>
+                <li>3. Place them in the same folder as your index.html</li>
+                <li>4. Refresh your Weight Manager app to see PWA installation prompt</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function drawIcon(canvas) {
+            const ctx = canvas.getContext('2d');
+            const size = canvas.width;
+            
+            // Create gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, size);
+            gradient.addColorStop(0, '#165DFF');
+            gradient.addColorStop(1, '#36CFC9');
+            
+            // Background with rounded corners
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, size * 0.2);
+            ctx.fill();
+            
+            // Outer circle
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = size * 0.016;
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size * 0.35, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Inner circle
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size * 0.29, 0, Math.PI * 2);
+            ctx.fill();
+            
+            const scale = size / 512;
+            
+            // Scale base
+            ctx.fillStyle = 'white';
+            ctx.globalAlpha = 0.9;
+            roundRect(ctx, 120*scale, 320*scale, 272*scale, 36*scale, 18*scale);
+            ctx.fill();
+            
+            // Scale platform stand
+            ctx.globalAlpha = 0.8;
+            roundRect(ctx, 200*scale, 356*scale, 112*scale, 60*scale, 12*scale);
+            ctx.fill();
+            
+            // Scale platform
+            ctx.globalAlpha = 0.9;
+            roundRect(ctx, 100*scale, 240*scale, 312*scale, 72*scale, 14*scale);
+            ctx.fill();
+            
+            // Platform inner
+            ctx.fillStyle = 'rgba(22, 93, 255, 0.3)';
+            ctx.globalAlpha = 1;
+            roundRect(ctx, 112*scale, 256*scale, 288*scale, 40*scale, 8*scale);
+            ctx.fill();
+            
+            // Display screen
+            ctx.fillStyle = 'white';
+            ctx.globalAlpha = 0.95;
+            roundRect(ctx, 160*scale, 120*scale, 192*scale, 100*scale, 20*scale);
+            ctx.fill();
+            
+            // Display inner
+            ctx.fillStyle = 'rgba(22, 93, 255, 0.1)';
+            ctx.globalAlpha = 1;
+            roundRect(ctx, 176*scale, 136*scale, 160*scale, 68*scale, 12*scale);
+            ctx.fill();
+            
+            // Weight text
+            ctx.fillStyle = '#165DFF';
+            ctx.font = `bold ${48*scale}px Inter, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('65kg', size/2, 185*scale);
+            
+            // Stand path
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 8*scale;
+            ctx.globalAlpha = 0.6;
+            ctx.beginPath();
+            ctx.moveTo(180*scale, 240*scale);
+            ctx.lineTo(160*scale, 120*scale);
+            ctx.lineTo(352*scale, 120*scale);
+            ctx.lineTo(332*scale, 240*scale);
+            ctx.stroke();
+        }
+        
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+        
+        function downloadIcon(size) {
+            const canvas = document.getElementById('canvas' + size);
+            const link = document.createElement('a');
+            link.download = size === 192 ? 'icon-192.png' : 'icon-512.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        // Draw icons on load
+        window.onload = function() {
+            drawIcon(document.getElementById('canvas192'));
+            drawIcon(document.getElementById('canvas512'));
+        };
+    </script>
+</body>
+</html>

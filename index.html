@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manage weight scientifically, easily create your ideal body">
+    <meta name="theme-color" content="#165DFF">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Weight Manager">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <title>Weight Manager</title>
+    <script src="https://cdn.tailwindcss.com/3.3.3"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        auxiliary: '#36CFC9',
+                        accent: '#0FC6C2',
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #165DFF 0%, #36CFC9 100%);
+        }
+        
+        @keyframes animate-float {
+            0%, 100% {
+                transform: translateY(0px) rotateX(0deg) rotateY(0deg);
+            }
+            25% {
+                transform: translateY(-15px) rotateX(5deg) rotateY(-5deg);
+            }
+            50% {
+                transform: translateY(-8px) rotateX(0deg) rotateY(0deg);
+            }
+            75% {
+                transform: translateY(-12px) rotateX(-3deg) rotateY(3deg);
+            }
+        }
+        
+        .animate-float {
+            animation: animate-float 4s ease-in-out infinite;
+            perspective: 1000px;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-primary {
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 20px 50px rgba(22, 93, 255, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+        
+        .wave-bg {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            pointer-events: none;
+        }
+        
+        .wave-bg svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 120px;
+        }
+        
+        .wave-path {
+            fill: rgba(255, 255, 255, 0.1);
+        }
+        
+        .wave-path-2 {
+            fill: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen px-4 py-8 overflow-hidden">
+    <div class="relative z-10 w-full max-w-md mx-auto text-center">
+        <!-- Header Icon - Weight Scale SVG -->
+        <div class="mb-8 animate-float">
+            <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="mx-auto drop-shadow-2xl">
+                <circle cx="60" cy="60" r="55" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+                <circle cx="60" cy="60" r="45" fill="rgba(255,255,255,0.15)"/>
+                <!-- Scale Base -->
+                <rect x="30" y="70" width="60" height="8" rx="4" fill="white" opacity="0.9"/>
+                <rect x="50" y="78" width="20" height="12" rx="2" fill="white" opacity="0.8"/>
+                <!-- Scale Platform -->
+                <rect x="25" y="55" width="70" height="15" rx="3" fill="white" opacity="0.9"/>
+                <rect x="30" y="58" width="60" height="9" rx="2" fill="rgba(22,93,255,0.3)"/>
+                <!-- Scale Display -->
+                <rect x="40" y="25" width="40" height="25" rx="5" fill="white" opacity="0.95"/>
+                <rect x="43" y="28" width="34" height="19" rx="3" fill="rgba(22,93,255,0.1)"/>
+                <!-- Weight Display Text -->
+                <text x="60" y="42" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#165DFF">65kg</text>
+                <!-- Scale Stand -->
+                <path d="M45 55 L40 25 L80 25 L75 55" stroke="white" stroke-width="2" opacity="0.6"/>
+            </svg>
+        </div>
+        
+        <!-- Title Section -->
+        <h1 class="mb-4 text-3xl font-bold text-white drop-shadow-lg sm:text-4xl md:text-5xl" style="font-size: clamp(2rem, 5vw, 3rem);">
+            Weight Manager
+        </h1>
+        <p class="mb-10 text-sm font-normal text-white opacity-90 sm:text-base md:text-lg">
+            Manage weight scientifically, easily create your ideal body
+        </p>
+        
+        <!-- Feature Cards - 2x2 Grid -->
+        <div class="grid grid-cols-2 gap-4 mb-10">
+            <!-- Card 1: Weight Record -->
+            <div class="glass-card rounded-2xl p-4 cursor-pointer">
+                <div class="flex flex-col items-center">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-2">
+                        <path d="M12 3V21M12 3L4 7M12 3L20 7M4 7V11C4 13.2091 5.79086 15 8 15C10.2091 15 12 13.2091 12 11M4 7L8 11M20 7V11C20 13.2091 18.2091 15 16 15C13.7909 15 12 13.2091 12 11M20 7L16 11M8 19H16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="text-sm font-semibold text-white">Weight Record</span>
+                </div>
+            </div>
+            
+            <!-- Card 2: Trend Analysis -->
+            <div class="glass-card rounded-2xl p-4 cursor-pointer">
+                <div class="flex flex-col items-center">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-2">
+                        <path d="M3 17L9 11L13 15L21 7M21 7H17M21 7V11" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <rect x="3" y="3" width="18" height="18" rx="2" stroke="white" stroke-width="2" opacity="0.3"/>
+                    </svg>
+                    <span class="text-sm font-semibold text-white">Trend Analysis</span>
+                </div>
+            </div>
+            
+            <!-- Card 3: Diet Plan -->
+            <div class="glass-card rounded-2xl p-4 cursor-pointer">
+                <div class="flex flex-col items-center">
+                    <svg width="40" height="40" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-2">
+                        <path d="M13 .5c0-.276-.226-.506-.498-.465-1.703.257-2.94 2.012-3 8.462a.5.5 0 0 0 .498.5c.56.01 1 .13 1 1.003v5.5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5zM4.25 0a.25.25 0 0 1 .25.25v5.122a.128.128 0 0 0 .256.006l.233-5.14A.25.25 0 0 1 5.24 0h.522a.25.25 0 0 1 .25.238l.233 5.14a.128.128 0 0 0 .256-.006V.25A.25.25 0 0 1 6.75 0h.29a.5.5 0 0 1 .498.458l.423 5.07a1.69 1.69 0 0 1-1.059 1.711l-.053.022a.92.92 0 0 0-.58.884L6.47 15a.971.971 0 1 1-1.942 0l.202-6.855a.92.92 0 0 0-.58-.884l-.053-.022a1.69 1.69 0 0 1-1.059-1.712L3.462.458A.5.5 0 0 1 3.96 0z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="text-sm font-semibold text-white">Diet Plan</span>
+                </div>
+            </div>
+            
+            <!-- Card 4: Exercise Advice -->
+            <div class="glass-card rounded-2xl p-4 cursor-pointer">
+                <div class="flex flex-col items-center">
+                    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-2">
+                        <path d="M50,85 C-10,50 20,-10 50,25 C80,-10 110,50 50,85 Z" fill="rgba(255,255,255,0.3)" stroke="white" stroke-width="3" stroke-linejoin="round"/>
+                        <path fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M25,50 L40,50 L45,35 L55,65 L60,50 L75,50"/>
+                    </svg>
+                    <span class="text-sm font-semibold text-white">Exercise Advice</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="space-y-4">
+            <button id="startBtn" class="btn-primary w-full py-4 text-lg font-bold text-primary bg-white rounded-full shadow-lg hover:shadow-xl">
+                Get Started
+            </button>
+            <a href="#" class="block text-sm font-medium text-white opacity-80 hover:opacity-100 hover:underline">
+                Already have an account? Click to login
+            </a>
+        </div>
+    </div>
+    
+    <!-- Wave Background Decorations -->
+    <div class="wave-bg">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
+            <path class="wave-path" d="M0,64 C480,150 960,-20 1440,64 L1440,120 L0,120 Z"/>
+        </svg>
+    </div>
+    <div class="wave-bg" style="bottom: -10px;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" preserveAspectRatio="none">
+            <path class="wave-path-2" d="M0,32 C360,80 720,0 1080,48 C1260,72 1380,56 1440,64 L1440,100 L0,100 Z"/>
+        </svg>
+    </div>
+    
+    <!-- JavaScript Interactions -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startBtn = document.getElementById('startBtn');
+            
+            startBtn.addEventListener('click', function() {
+                const originalText = this.textContent;
+                this.textContent = 'Loading...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    this.textContent = originalText;
+                    this.disabled = false;
+                }, 1000);
+            });
+        });
+        
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                        
+                        // Check for updates
+                        registration.addEventListener('updatefound', function() {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', function() {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New content available, show update notification
+                                    if (confirm('New version available! Click OK to update.')) {
+                                        newWorker.postMessage({ action: 'skipWaiting' });
+                                        window.location.reload();
+                                    }
+                                }
+                            });
+                        });
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+        
+        // Handle online/offline status
+        function updateOnlineStatus() {
+            const status = navigator.onLine ? 'online' : 'offline';
+            console.log('App is now ' + status);
+            if (!navigator.onLine) {
+                showOfflineNotification();
+            }
+        }
+        
+        function showOfflineNotification() {
+            // Could show a toast notification here
+            console.log('App is running in offline mode');
+        }
+        
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+    </script>
+</body>
+</html>
